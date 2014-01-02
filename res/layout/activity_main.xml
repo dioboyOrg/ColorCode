@@ -1,0 +1,118 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity" >
+
+    <RelativeLayout
+        android:id="@+id/ColorLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/ColorCodeLayout"
+        android:layout_alignParentTop="true"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin" />
+
+    <RelativeLayout
+        android:id="@+id/ColorCodeLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/RGBValueLayout" >
+
+        <EditText
+            android:id="@+id/ColorCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/ColorCodeOk"
+            android:hint="@string/color_code"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:singleLine="true" />
+
+        <Button
+            android:id="@+id/ColorCodeOk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="ok" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/RGBValueLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/RGBSeekBarLayout"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/activity_vertical_margin" >
+
+        <EditText
+            android:id="@+id/RedValue"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/red"
+            android:inputType="number"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/GreenValue"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/green"
+            android:inputType="number"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/BlueValue"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/blue"
+            android:inputType="number"
+            android:singleLine="true" />
+
+        <Button
+            android:id="@+id/RGBOk"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="ok" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/RGBSeekBarLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical" >
+
+        <SeekBar
+            android:id="@+id/RedColorBar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#FF0000"
+            android:paddingBottom="@dimen/activity_vertical_margin" />
+
+        <SeekBar
+            android:id="@+id/GreenColorBar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#00FF00"
+            android:paddingBottom="@dimen/activity_vertical_margin" />
+
+        <SeekBar
+            android:id="@+id/BlueColorBar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#0000FF"
+            android:paddingBottom="@dimen/activity_vertical_margin" />
+    </LinearLayout>
+
+</RelativeLayout>

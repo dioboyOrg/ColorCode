@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">"  ColorCode"</string>
+    <string name="action_settings">Settings</string>
+    <string name="color_code">Color Code(ex. #000000)</string>
+    <string name="red">Red(0~255)</string>
+    <string name="green">GreenRed(0~255)</string>
+    <string name="blue">BlueRed(0~255)</string>
+    <string name="failed">failed</string>
+</resources>
