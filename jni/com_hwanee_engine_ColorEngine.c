@@ -29,9 +29,11 @@ void HexadecimalToInterger(char* colorhex, int* rgb){
     int j=0;
     for(i=0; i<6; i += 2) {
     char* tmp = (char*)malloc(sizeof(char)*2);
+    *tmp = "";
     memcpy(tmp, colorhex+i, sizeof(char)*2);
     *(rgb+j) = (int)strtol(tmp, NULL,16);
-        j++;
+    j++;
+    free(tmp);
     }
 }
 
