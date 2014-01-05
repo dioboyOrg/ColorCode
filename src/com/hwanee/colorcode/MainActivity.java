@@ -11,6 +11,7 @@ import android.R.interpolator;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.View;
@@ -82,8 +83,17 @@ public class MainActivity extends Activity {
 
 		@Override
 		public void onClick(View v) {
+			if (mColorCodeEdit == null) {
+				return;
+			}
 			String color = mColorCodeEdit.getText().toString();
+			if (color == null || color.length() != 7) {
+				return;
+			}
 			setColor(color.toUpperCase());
+			mRGB = ColorEngine.convertColorCodeToRGB(color.substring(1,
+					color.length()));
+			setRGBEdit();
 		}
 	};
 
@@ -95,14 +105,20 @@ public class MainActivity extends Activity {
 			if (mRedEdit == null || mGreenEdit == null || mBlueEdit == null) {
 				return;
 			}
-			mRGB[0] = Integer.valueOf(mRedEdit.getText().toString());
-			mRGB[1] = Integer.valueOf(mGreenEdit.getText().toString());
-			mRGB[2] = Integer.valueOf(mBlueEdit.getText().toString());
+			String red = mRedEdit.getText().toString();
+			String green = mGreenEdit.getText().toString();
+			String blue = mBlueEdit.getText().toString();
+			if (red == null || green == null || blue == null) {
+				return;
+			}
+			mRGB[0] = Integer.valueOf(red);
+			mRGB[1] = Integer.valueOf(green);
+			mRGB[2] = Integer.valueOf(blue);
 			if (isRGBData(mRGB)) {
 				String colorCode = "#"
 						+ ColorEngine.convertRGBToColorCode(mRGB);
 				if (colorCode != null) {
-					Toast.makeText(getApplicationContext(), colorCode,
+					Toast.makeText(getBaseContext(), colorCode,
 							Toast.LENGTH_SHORT).show();
 					String result = getColorPattern(colorCode);
 					setColor(result);
@@ -126,8 +142,8 @@ public class MainActivity extends Activity {
 				if (colorCode != null) {
 					String result = getColorPattern(colorCode);
 					setRGBBar();
-					Toast.makeText(getApplicationContext(), result,
-							Toast.LENGTH_SHORT).show();
+					Toast.makeText(getBaseContext(), result, Toast.LENGTH_SHORT)
+							.show();
 					setColor(result);
 					if (mColorCodeEdit != null) {
 						mColorCodeEdit.setText(result);
@@ -154,15 +170,15 @@ public class MainActivity extends Activity {
 		if (color != null && color.length() != 7) {
 			return;
 		}
-		
+
 		Pattern p = Pattern.compile(COLOR_CODE_PATTERN);
 		Matcher m = p.matcher(color);
-		
-		if(!m.matches()) {
+
+		if (!m.matches()) {
 			Toast.makeText(this, R.string.failed, Toast.LENGTH_SHORT).show();
 			return;
 		}
-		
+
 		if (mColorLayout != null) {
 			mColorLayout.setBackgroundColor(Color.parseColor(color));
 		}

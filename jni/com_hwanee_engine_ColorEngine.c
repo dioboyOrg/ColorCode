@@ -12,8 +12,7 @@
 extern "C" {
 #endif
 
-    char getHexValue(int value) {
-    __android_log_print(ANDROID_LOG_INFO, "color", "getHexValue #1 = %d", value);
+char getHexValue(int value) {
 	if (value < 0)
 		return -1;
 	if (value > 16)
@@ -24,32 +23,50 @@ extern "C" {
 	value -= 10;
 	return (char) ('A' + value);
 }
-
-    void IntegerToHexadecimal(int value, char *hexString, int* size) {
-    __android_log_print(ANDROID_LOG_INFO, "color", "IntegerToHexadecimal #1 = %d", value);
-	int i = 0;
-	int remainders[2] = {0,0};
-	int result = value;
-	while (result) {
-		remainders[i++] = result % 16;
-		result /= (int) 16;
-	}
-	int j = 0;
-        for (i = 0; i < 2; i++) {
-    __android_log_print(ANDROID_LOG_INFO, "color", "IntegerToHexadecimal %d = %d", i, remainders[i]);
-		char c = getHexValue(remainders[i]);
-	 __android_log_print(ANDROID_LOG_INFO, "color", "IntegerToHexadecimal char c =  = %c", c);
-		*(hexString + ((*size)++)) = c;
-	}
-    __android_log_print(ANDROID_LOG_INFO, "color", "%s", hexString);
+    
+void HexadecimalToInterger(char* colorhex, int* rgb){
+    int i=0;
+    int j=0;
+    for(i=0; i<6; i += 2) {
+    char* tmp = (char*)malloc(sizeof(char)*2);
+    memcpy(tmp, colorhex+i, sizeof(char)*2);
+    *(rgb+j) = (int)strtol(tmp, NULL,16);
+        j++;
+    }
 }
 
+void IntegerToHexadecimal(int value, char *hexString, int* size) {
+    int i = 0;
+    int remainders[2] = {0,0};
+    int result = value;
+    remainders[0] = result / 16;
+    remainders[1] = result % 16;
+    
+    int j = 0;
+    for (j =0; j < 2; j++) {
+        char c = getHexValue(remainders[j]);
+        *(hexString + (*size)++) = c;
+    }
+}
 /*
  * Class:     com_hwanee_engine_ColorEngine
  * Method:    convertColorCodeToRGB
  * Signature: (Ljava/lang/String;)[I
  */
-JNIEXPORT jintArray JNICALL Java_com_hwanee_engine_ColorEngine_convertColorCodeToRGB(JNIEnv * env, jclass _class, jstring colorcode);
+JNIEXPORT jintArray JNICALL Java_com_hwanee_engine_ColorEngine_convertColorCodeToRGB(JNIEnv * env, jclass _class, jstring colorcode){
+    char* colorhex = (*env)->GetStringUTFChars(env, colorcode, 0);
+    int* rgb = (int*) malloc(3);
+    HexadecimalToInterger(colorhex, rgb);
+    (*env)->ReleaseStringUTFChars(env, colorcode, colorhex);
+    jintArray newRgb = (*env)->NewIntArray(env, 3);
+    jint *narr = (*env)->GetIntArrayElements(env, newRgb, 0);
+    int i = 0;
+    for(i=0; i<3; i++){
+        narr[i] = rgb[i];
+    }
+    //(*env)->ReleaseIntArrayElements(env, narr,newRgb,0);
+    return newRgb;
+}
 
 /*
  * Class:     com_hwanee_engine_ColorEngine
@@ -57,21 +74,16 @@ JNIEXPORT jintArray JNICALL Java_com_hwanee_engine_ColorEngine_convertColorCodeT
  * Signature: ([I)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_com_hwanee_engine_ColorEngine_convertRGBToColorCode(JNIEnv * env, jclass _class, jintArray rgb) {
-   int size = 0;
-	__android_log_print(ANDROID_LOG_INFO, "color", "convertRGBToColorCode #1");
-	char* hexString = (char*) malloc(6);
-    __android_log_print(ANDROID_LOG_INFO, "color", "convertRGBToColorCode #2");
+    int size = 0;
+    char* hexString = (char*) malloc(6);
     int* rgbdata = (*env)->GetIntArrayElements(env, rgb, NULL);
-    __android_log_print(ANDROID_LOG_INFO, "color", "%d %d %d", rgbdata[0], rgbdata[1], rgbdata[2]);
-    __android_log_print(ANDROID_LOG_INFO, "color", "convertRGBToColorCode #3");
-	int i = 0;
-	for (i = 0; i < 3; i++) {
-    __android_log_print(ANDROID_LOG_INFO, "color", "convertRGBToColorCode #4 size = %d", size);
-		IntegerToHexadecimal(rgbdata[i], hexString, &size);
-	}
-    __android_log_print(ANDROID_LOG_INFO, "color", "%s",  hexString);
-    __android_log_print(ANDROID_LOG_INFO, "color", "convertRGBToColorCode #5");
-	return (*env)->NewStringUTF(env, hexString);
+    int i = 0;
+    for (i = 0; i < 3; i++) {
+        IntegerToHexadecimal(rgbdata[i], hexString, &size);
+    }
+    (*env)->ReleaseIntArrayElements(env, rgb, rgbdata, NULL);
+    // free(hexString);
+    return (*env)->NewStringUTF(env, hexString);
 }
 
 #ifdef __cplusplus
